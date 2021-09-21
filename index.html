@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Blog App</title>
+    <link rel="stylesheet" href="bulma.css">
+</head>
+<body class="has-background-light">
+
+    <div id="app" class="container shadow">
+        <div class="columns">
+            <div class="column"></div>
+
+            <div class="column is-three-fifths has-background-white p-5">
+                    <div class="content">
+                        <h1><strong class="has-text-dark-light">How to Make a Post</strong></h1>
+                        <div id="typed-strings">
+                            <h1 class="subtitle has-text-success">
+                                <i>Enter Your Name</i>
+                            </h1>
+                            <h1 class="subtitle has-text-success">
+                                <i>Enter Post Title</i>
+                            </h1>
+                            <h1 class="subtitle has-text-success">
+                                <i>Enter Post Body</i>
+                            </h1>
+                            <h1 class="subtitle has-text-success">
+                                <i>Click the Submit Button</i>
+                            </h1>
+                            <h1 class="subtitle has-text-success">
+                                <i>Viola! that easy</i>
+                            </h1>
+                          </div>
+                          <div class="content">
+                            <span id="typed"></span> <br>
+                          </div>
+                    </div>
+                    <div class="control">
+                        <input class="input my-2 is-warning" v-model="post.author" id="author" type="text" placeholder="Enter your name" required>
+                    </div>
+                    <div class="control">
+                        <input class="input my-2 is-warning" v-model="post.title" id="title" type="text" placeholder="Give your post a title" required>
+                    </div>
+                    <div class="control">
+                        <textarea class="textarea is-warning" v-model="post.body" id="body" placeholder="Make your post here" required></textarea>
+                    </div>
+                    <button v-on:click="addPost" class="button is-danger is-rounded is-focused is-light mt-3">Submit</button>
+                <hr>
+               <div class="content is-normal">
+                    <h2 class="has-text-warning-dark">Blog Posts</h2>
+                     <article class="my-5 has-background-danger-light p-5 shadow" v-for="post in posts" v-bind:key="post.title">
+                        <p><strong><i>Written by</i>:</strong> {{post.author}}</p>
+                        <h3 class="has-text-warning-dark">{{post.title}}</h3>
+                        <p>{{post.body}}</p>
+                        <button class="button is-danger is-small" @click="DeletePost">Delete Post</button>
+                     </article>
+               </div>
+        
+                <app v-if="show_title">
+                    <div class="content">
+                        <h1>About This Project</h1>
+                        <p>
+                            This is my first Vuejs blog app. It is without a database so the moment you refresh the page, every post you made literally would be off the application.
+                        </p>
+                        <p>
+                            It makes sense because Vuejs is a Javascript front-end framework that helps us build asynchronous applications. Which means our page does not have to reload and fetch it's entire resource at every simple HTTP request.
+                        </p>
+                        <p>
+                            I'll be building more and applications using Vuejs and also make blog posts teaching about how I'm learning and using Vuejs. <i>Cheers</i>
+                        </p>
+                    </div>
+                </app>
+        
+                <button class="button is-dark is-rounded is-small" v-on:click="showTitle">Show About</button>
+                <button class="button is-warning is-light is-rounded is-small" v-on:click="hideTitle">Hide</button>
+            </div>
+
+            <div class="column"></div>
+
+        </div>  
+    </div>
+
+
+<script src="vue3.js"></script>
+<script src="typed.js"></script>
+<script>
+
+   class Posts {
+       constructor(author, title, body) {
+           this.author = author;
+           this.title = title;
+           this.body = body;
+       }
+   }
+
+    let _author = document.querySelector('#author').value;
+    let _title = document.querySelector('#title').value;
+    let _body = document.querySelector('#body').value;
+
+    let post = new Posts(_author, _title, _body);
+
+let component_one = {
+       template: `
+        <div>
+            <slot></slot>
+        </div>
+       `
+   }
+
+let app = new Vue({
+    el: '#app',
+    components: {
+        'app': component_one
+    },
+    data: {
+        post: post,
+        posts: [],
+       show_title: false,
+       show_use: false
+    }, 
+    methods: {
+       addPost() {
+          this.posts.push(this.post).value
+          this.post = {}
+       },
+       showTitle() {
+           this.show_title = true
+       },
+       hideTitle() {
+           this.show_title = false
+       },
+       DeletePost() {
+           this.posts.pop(this.post)
+       }
+    },
+    mounted() {
+        
+    }
+}) 
+   
+</script>
+<script>
+    var typed = new Typed('#typed', {
+      stringsElement: '#typed-strings',
+      typeSpeed: 100,
+      loop: true
+    });
+  </script>
+</body>
+</html>
